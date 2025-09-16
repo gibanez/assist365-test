@@ -1,0 +1,427 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API SkyLink",
+        "description": "Documentación de la API con OpenAPI/Swagger en Laravel",
+        "contact": {
+            "email": "soporte@miapp.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Servidor API local"
+        }
+    ],
+    "paths": {
+        "/api/passengers/{id}": {
+            "get": {
+                "tags": [
+                    "Passengers"
+                ],
+                "summary": "Obtener pasajero por ID",
+                "operationId": "b88a1ab8638d58c1159a2f6541d6869c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del pasajero",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pasajero encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "123"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Juan Pérez"
+                                        },
+                                        "document": {
+                                            "type": "string",
+                                            "example": "DNI 12345678"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pasajero no encontrado"
+                    }
+                }
+            }
+        },
+        "/api/reservations": {
+            "get": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Listar reservas",
+                "description": "Devuelve una lista de reservas aplicando filtros por departure_time y status, con ordenamiento y paginación.",
+                "operationId": "8e7574ad46e946156c4372cbb8fa1af5",
+                "parameters": [
+                    {
+                        "name": "filter[0][field]",
+                        "in": "query",
+                        "description": "Campo a filtrar (ejemplo: departure_time)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "departure_time"
+                        }
+                    },
+                    {
+                        "name": "filter[0][condition]",
+                        "in": "query",
+                        "description": "Condición de filtro (ej: eq)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "eq"
+                        }
+                    },
+                    {
+                        "name": "filter[0][value]",
+                        "in": "query",
+                        "description": "Valor del filtro de departure_time",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-10-15 14:30:00"
+                        }
+                    },
+                    {
+                        "name": "filter[1][field]",
+                        "in": "query",
+                        "description": "Campo a filtrar (ejemplo: status)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "status"
+                        }
+                    },
+                    {
+                        "name": "filter[1][condition]",
+                        "in": "query",
+                        "description": "Condición de filtro (ej: in)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "in"
+                        }
+                    },
+                    {
+                        "name": "filter[1][value]",
+                        "in": "query",
+                        "description": "Valor del filtro de status",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "CONFIRMED"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Ordenamiento por campos (ej: -departure_time,status)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "-departure_time,status"
+                        }
+                    },
+                    {
+                        "name": "page[offset]",
+                        "in": "query",
+                        "description": "Offset de paginación",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    },
+                    {
+                        "name": "page[limit]",
+                        "in": "query",
+                        "description": "Cantidad de resultados por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Listado de reservas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "jsonapi": {
+                                            "properties": {
+                                                "version": {
+                                                    "type": "string",
+                                                    "example": "1.0"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "abc123"
+                                                    },
+                                                    "flight_number": {
+                                                        "type": "string",
+                                                        "example": "AR1234"
+                                                    },
+                                                    "departure_time": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-10-15 14:30:00"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "CONFIRMED"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Crear nueva reserva",
+                "description": "Crea una nueva reserva con estado inicial PENDING y pasajeros asociados.",
+                "operationId": "db25d5ddbdf5d346bf0c94cff3dfb64d",
+                "requestBody": {
+                    "description": "Datos para crear la reserva",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "flight_number",
+                                    "departure_time",
+                                    "passengers"
+                                ],
+                                "properties": {
+                                    "flight_number": {
+                                        "type": "string",
+                                        "example": "AR1234"
+                                    },
+                                    "departure_time": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-10-15 14:30:00"
+                                    },
+                                    "passengers": {
+                                        "description": "IDs de pasajeros existentes asociados a la reserva",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Reserva creada con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Reservation created successfully"
+                                        },
+                                        "reservation": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "abc123"
+                                                },
+                                                "flight_number": {
+                                                    "type": "string",
+                                                    "example": "AR1234"
+                                                },
+                                                "departure_time": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-10-15 14:30:00"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "PENDING"
+                                                },
+                                                "passengers": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Juan Pérez"
+                                                            },
+                                                            "document": {
+                                                                "type": "string",
+                                                                "example": "DNI 12345678"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Solicitud inválida (faltan datos requeridos)"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                }
+            }
+        },
+        "/api/reservations/{id}/status": {
+            "patch": {
+                "tags": [
+                    "Reservations"
+                ],
+                "summary": "Cambiar estado de una reserva",
+                "description": "Permite actualizar el estado de una reserva existente.",
+                "operationId": "5ae3aa8342295765853b446ab2728dee",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la reserva",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "abc123"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Nuevo estado de la reserva",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "CONFIRMED"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Estado actualizado con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "jsonapi": {
+                                            "properties": {
+                                                "version": {
+                                                    "type": "string",
+                                                    "example": "1.0"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Change status: OK"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Solicitud inválida (estado no permitido)"
+                    },
+                    "404": {
+                        "description": "Reserva no encontrada"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Passengers",
+            "description": "Passengers"
+        },
+        {
+            "name": "Reservations",
+            "description": "Reservations"
+        }
+    ]
+}
