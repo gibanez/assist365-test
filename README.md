@@ -112,7 +112,7 @@ El proyecto está estructurado siguiendo principios de **arquitectura limpia**, 
 - **Inyección de dependencias:** Desacopla los componentes, facilita testing y mantenimiento.
 - **Patrones de diseño:**  
   - **Factory:** Para la creación de objetos complejos y desacoplar la lógica de instanciación.  
-  - **Observer / Pub-Sub:** En Node.js para notificar cambios en tiempo real al dashboard.  
+  - **Inyeccion de dependecia:** desacopla los componentes de una aplicación, promoviendo la modularidad, flexibilidad.  
 - **Principios SOLID:** Para asegurar código más mantenible, escalable y entendible.
 
 Estas decisiones permiten escalar el proyecto de manera ordenada, agregar nuevas funcionalidades sin impactar la arquitectura existente y mantener un código limpio y testeable.
