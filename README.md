@@ -1,61 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Proyecto Assist 365
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto consiste en un sistema de gestión de reservas y pasajeros, con un dashboard en tiempo real que se comunica con un servicio Node.js vía sockets. Está desarrollado utilizando **PHP con Laravel** para el backend principal, **Node.js** para el servicio de notificaciones en tiempo real y **Vue.js/Frontend** para el dashboard.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Cómo correr el proyecto
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Backend - PHP / Laravel
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Configurar variables de entorno**
 
-## Learning Laravel
+Crea un archivo `.env` en la raíz del proyecto y define las variables de conexión a la base de datos:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=assist_365
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2. **Instalar dependencias de PHP**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+composer install
+```
 
-## Laravel Sponsors
+3. **Migrar la base de datos**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+php artisan migrate
+```
 
-### Premium Partners
+4. **Cargar datos de prueba**
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+php artisan db:seed  # Esto crea pasajeros de prueba
+```
 
-## Contributing
+5. **Levantar el servidor de desarrollo**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan serve
+```
 
-## Code of Conduct
+El backend estará disponible en `http://127.0.0.1:8000` por defecto.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+### Servicio Node.js - Socket
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+El servicio Node se encarga de monitorear cambios en la base de datos y notificar a los clientes conectados en tiempo real.
 
-## License
+1. **Ingresar a la carpeta del servicio**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+cd node-service
+```
+
+2. **Configurar variables de entorno**
+
+Crea un archivo `.env` en la carpeta `node-service` con la siguiente configuración:
+
+```env
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=assist_365
+DB_USERNAME=root
+DB_PASSWORD=
+POLL_INTERVAL=2000  # Intervalo de chequeo de cambios en milisegundos
+```
+
+3. **Instalar dependencias de Node.js**
+
+```bash
+npm install
+```
+
+4. **Iniciar el servicio**
+
+```bash
+node main.js
+```
+
+---
+
+### Frontend - Dashboard
+
+1. **Instalar dependencias**
+
+```bash
+npm install
+```
+
+2. **Levantar servidor de desarrollo**
+
+```bash
+npm run dev  # modo desarrollo
+```
+
+El dashboard estará disponible en el puerto configurado en `vite.config.js` (por defecto `http://localhost:3000`).
+
+---
+
+## Justificación técnica de la arquitectura
+
+El proyecto está estructurado siguiendo principios de **arquitectura limpia**, priorizando:
+
+- **Composición sobre herencia:** Evita jerarquías rígidas y permite mayor flexibilidad.
+- **Inyección de dependencias:** Desacopla los componentes, facilita testing y mantenimiento.
+- **Patrones de diseño:**  
+  - **Factory:** Para la creación de objetos complejos y desacoplar la lógica de instanciación.  
+  - **Observer / Pub-Sub:** En Node.js para notificar cambios en tiempo real al dashboard.  
+- **Principios SOLID:** Para asegurar código más mantenible, escalable y entendible.
+
+Estas decisiones permiten escalar el proyecto de manera ordenada, agregar nuevas funcionalidades sin impactar la arquitectura existente y mantener un código limpio y testeable.
+
+---
+
+## Estructura del proyecto (resumida)
+
+```
+├── app/       # Código PHP Laravel
+├── node-service/          # Servicio de notificaciones en tiempo real
+├── front/    # Dashboard en Vue.js / Vite
+└── README.md
+```
+
+---
+
+## Notas adicionales
+
+- Asegúrate de tener MySQL corriendo y la base de datos creada antes de ejecutar migraciones.
+- El `POLL_INTERVAL` en Node.js puede ajustarse según la frecuencia deseada de actualización en tiempo real.
+- Para producción, se recomienda configurar servidores web y proxies (Nginx, PM2, etc.) y habilitar HTTPS.
+
