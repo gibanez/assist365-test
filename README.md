@@ -46,6 +46,9 @@ php artisan serve
 ```
 
 El backend estará disponible en `http://127.0.0.1:8000` por defecto.
+El documentacion api `http://localhost:8000/api/documentation#/` por defecto.
+
+
 
 ---
 
